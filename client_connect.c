@@ -1,3 +1,5 @@
+#include "header.h"
+
 static void init(void)
 {
 #ifdef _WIN32
@@ -31,9 +33,9 @@ void	arg(int argc, char **argv)
 
 int	init_connection(char **argv)
 {
+	int temps = 0;
 	int network_socket;
 	int connection_status;
-	char server_response[1024];
 
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN server_address = {0};
@@ -42,6 +44,7 @@ int	init_connection(char **argv)
 	if (network_socket == INVALID_SOCKET)
 	{
 		perror("socket()");
+		closesocket(network_socket);
 		exit(errno);
 	}
 	
@@ -49,25 +52,41 @@ int	init_connection(char **argv)
 	if (hostinfo == NULL)
 	{
 		printf("Unknow host %s.\n", argv[1]);
+		closesocket(network_socket);
 		exit(EXIT_FAILURE);
 	}
+	else
+		printf("Building connection...\n");
 
 	server_address.sin_addr = *(IN_ADDR *) hostinfo->h_addr;
 	server_address.sin_port = htons(atoi(argv[2]));
 	server_address.sin_family = AF_INET;
+	
+	do
+	{
+		printf("try to connect to the server...\n");
+		connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
+		ATTENDRE(1);
+		if (connection_status != SOCKET_ERROR)
+			temps = 15;
+		else
+			temps++;
 
-	connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
+	} while (temps < 15);
+
 	if (connection_status == SOCKET_ERROR)
 	{	
 		perror("connect()");
+		closesocket(network_socket);
 		exit(errno);
 	}
+	else
+		printf("Success connecting.\n");
 	
-	recv(network_socket, &server_response, sizeof(server_response), 0);
+	return network_socket;
+}
 
-	printf("server: %s\n", server_response);
-
-	closesocket(network_socket);
-	
-	return 0;
+void	close_connection(int socket)
+{
+	closesocket(socket);
 }
