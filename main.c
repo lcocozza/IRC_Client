@@ -7,7 +7,7 @@ int	main(int argc, char **argv)
 	arg(argc, argv);
 	socket = init_connection(argv);
 	app(socket);
-	closeconnection(socket);
+	close_connection(socket);
 
 	return 0;
 }
