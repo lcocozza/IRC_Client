@@ -33,9 +33,9 @@ void	arg(int argc, char **argv)
 
 int	init_connection(char **argv)
 {
-	int temps = 0;
-	int network_socket;
+	SOCKET network_socket;
 	int connection_status;
+	int time = 0;
 
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN server_address = {0};
@@ -68,25 +68,20 @@ int	init_connection(char **argv)
 		connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
 		ATTENDRE(1);
 		if (connection_status != SOCKET_ERROR)
-			temps = 15;
-		else
-			temps++;
-
-	} while (temps < 15);
+			time = 15;
+		time++;
+	} while (time < 15);
 
 	if (connection_status == SOCKET_ERROR)
 	{	
 		perror("connect()");
 		closesocket(network_socket);
 		exit(errno);
-	}
-	else
-		printf("Success connecting.\n");
-	
+	}	
 	return network_socket;
 }
 
-void	close_connection(int socket)
+void	close_connection(SOCKET socket)
 {
 	closesocket(socket);
 }

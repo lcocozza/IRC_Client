@@ -34,8 +34,13 @@ typedef struct in_addr IN_ADDR;
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <string.h>
+#include <stdint.h>
 
 void	arg(int argc, char **argv);
 int	init_connection(char **argv);
-int	app(int socket);
-void	close_connection(int network_socket);
+void	app(SOCKET socket);
+void	send_message(SOCKET socket, char *buffer);
+int	receive_message(SOCKET socket, char *buffer);
+void	close_connection(SOCKET socket);
+void	viderBuffer();
