@@ -43,4 +43,4 @@ void	app(SOCKET socket);
 void	send_message(SOCKET socket, char *buffer);
 int	receive_message(SOCKET socket, char *buffer);
 void	close_connection(SOCKET socket);
-void	viderBuffer();
+void	cleanBuffer(char *buffer);

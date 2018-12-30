@@ -5,17 +5,13 @@ void	app(SOCKET socket)
 	char buffer[1024];
 	int statu;
 	fd_set readfs;
-	
-	receive_message(socket, buffer);
-	printf("%s", buffer);
-	viderBuffer();
-	
+
 	while(1)
 	{
 		FD_ZERO(&readfs);
 		FD_SET(socket, &readfs);
 		FD_SET(STDIN_FILENO, &readfs);
-		
+
 		if (select(socket + 1, &readfs, NULL, NULL, NULL) == -1)
 		{
 			perror("select()");
@@ -29,15 +25,15 @@ void	app(SOCKET socket)
 		else if (FD_ISSET(socket, &readfs))
 		{
 			statu = receive_message(socket, buffer);
-			if (statu == -1)
+			if (statu < 0)
 			{
 				printf("Server disconnected !\n");
 				break;
 			}
 			else
 			{
-				printf("%s", buffer);
-				viderBuffer();
+				printf("%s\n", buffer);
+				cleanBuffer(buffer);
 			}
 		}
 	}
@@ -45,28 +41,32 @@ void	app(SOCKET socket)
 }
 
 void	send_message(SOCKET socket, char *buffer)
-{
+{	
+	int i;
+
+	for (i = 0; buffer[i] != '\n'; i++) ;
+	buffer[i] = '\0';
+
 	if (send(socket, buffer, strlen(buffer), 0) < 0)
 	{
 		perror("send()");
 		exit(errno);
 	}
-	viderBuffer();
+	cleanBuffer(buffer);
 }
 
 int	receive_message(SOCKET socket, char *buffer)
 {
 	int statu = 0;
-	if (statu = recv(socket, buffer, 1024, 0) < 0)
+	if ((statu = recv(socket, buffer, 1024, 0)) < 0)
 		perror("recv()");
 	return statu;
 }
 
-void viderBuffer()
+void cleanBuffer(char *buffer)
 {
-    /*int c = 0;
-    while (c != '\n' && c != EOF)
-    {
-        c = getchar();
-    }*/
+	int i;
+	for (i = 1; buffer[i] != '\0'; i++)
+		buffer[i - 1] = '\0';
+	buffer[i] = '\0';
 }

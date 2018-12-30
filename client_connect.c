@@ -39,7 +39,7 @@ int	init_connection(char **argv)
 
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN server_address = {0};
-	struct hostent *hostinfo;
+	struct hostent *hostinfo = NULL;
 
 	if (network_socket == INVALID_SOCKET)
 	{
@@ -66,9 +66,10 @@ int	init_connection(char **argv)
 	{
 		printf("try to connect to the server...\n");
 		connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
-		ATTENDRE(1);
-		if (connection_status != SOCKET_ERROR)
-			time = 15;
+		if (connection_status == SOCKET_ERROR)
+			ATTENDRE(1);
+		else
+			time = 14;
 		time++;
 	} while (time < 15);
 
