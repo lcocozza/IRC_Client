@@ -3,8 +3,12 @@
 void	app(SOCKET socket)
 {
 	char buffer[1024];
+	char pseudo[24];
+	char msg[1000];
 	int statu;
 	fd_set readfs;
+
+	strcpy(pseudo, "[Pseudo] ");
 
 	while(1)
 	{
@@ -19,13 +23,16 @@ void	app(SOCKET socket)
 		}
 		if (FD_ISSET(STDIN_FILENO, &readfs))
 		{
-			fgets(buffer, sizeof(char) * 1024, stdin);
+			fgets(msg, sizeof(char) * 1000, stdin);
+			strcpy(buffer, pseudo);
+			strcat(buffer, msg);
 			send_message(socket, buffer);
+			cleanBuffer(buffer);
 		}
 		else if (FD_ISSET(socket, &readfs))
 		{
 			statu = receive_message(socket, buffer);
-			if (statu < 0)
+			if (statu == 0)
 			{
 				printf("Server disconnected !\n");
 				break;
