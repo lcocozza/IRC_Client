@@ -7,10 +7,12 @@ void	app(SOCKET socket)
 	char msg[1000];
 	int statu;
 	fd_set readfs;
+	
+	strcpy(pseudo, "[");
+	strcat(pseudo, getname(sizeof(pseudo)));
+	strcat(pseudo, "] ");
 
-	strcpy(pseudo, "[Pseudo] ");
-
-	while(1)
+	while (1)
 	{
 		FD_ZERO(&readfs);
 		FD_SET(socket, &readfs);
@@ -27,7 +29,7 @@ void	app(SOCKET socket)
 			strcpy(buffer, pseudo);
 			strcat(buffer, msg);
 			send_message(socket, buffer);
-			cleanBuffer(buffer);
+			cleanMsg(buffer, msg);
 		}
 		else if (FD_ISSET(socket, &readfs))
 		{
@@ -40,7 +42,7 @@ void	app(SOCKET socket)
 			else
 			{
 				printf("%s\n", buffer);
-				cleanBuffer(buffer);
+				cleanMsg(buffer, msg);
 			}
 		}
 	}
@@ -59,7 +61,6 @@ void	send_message(SOCKET socket, char *buffer)
 		perror("send()");
 		exit(errno);
 	}
-	cleanBuffer(buffer);
 }
 
 int	receive_message(SOCKET socket, char *buffer)
@@ -70,10 +71,22 @@ int	receive_message(SOCKET socket, char *buffer)
 	return statu;
 }
 
-void cleanBuffer(char *buffer)
+void	cleanMsg(char *buffer, char *msg)
 {
-	int i;
-	for (i = 1; buffer[i] != '\0'; i++)
-		buffer[i - 1] = '\0';
-	buffer[i] = '\0';
+	/*int i;
+	for (i = 0; buffer[i] != '\0'; i++)
+		buffer[i] = 0;*/
+	strcpy(buffer, "");
+	strcpy(msg, "");
+}
+
+char	*getname(size_t namesize)
+{
+	char *tmp = NULL;
+
+	tmp = malloc(namesize);
+
+	getlogin_r(tmp, namesize);
+
+	return tmp;
 }

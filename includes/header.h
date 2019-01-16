@@ -3,6 +3,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
+#define CLRSRC "cls"
 #define ATTENDRE(temps) Sleep(temps*1000)
 
 #elif __linux__
@@ -18,6 +19,7 @@
 #define SOCKET_ERROR -1
 #define closesocket(s) close(s)
 #define ATTENDRE(temps) sleep(temps)
+#define CLRSRC "clear"
 
 typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
@@ -43,4 +45,6 @@ void	app(SOCKET socket);
 void	send_message(SOCKET socket, char *buffer);
 int	receive_message(SOCKET socket, char *buffer);
 void	close_connection(SOCKET socket);
-void	cleanBuffer(char *buffer);
+void	cleanMsg(char *buffer, char *msg);
+void	title();
+char	*getname(size_t namesize);
