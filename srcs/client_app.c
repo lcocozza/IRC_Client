@@ -2,9 +2,7 @@
 
 void	app(SOCKET socket)
 {
-	char buffer[1024];
 	char pseudo[24];
-	char msg[1000];
 	int statu;
 	fd_set readfs;
 	
@@ -14,6 +12,9 @@ void	app(SOCKET socket)
 
 	while (1)
 	{
+		char *buffer = malloc(sizeof(char) * 1024);
+		char *msg = malloc(sizeof(char) * 1000);
+
 		FD_ZERO(&readfs);
 		FD_SET(socket, &readfs);
 		FD_SET(STDIN_FILENO, &readfs);
@@ -76,8 +77,8 @@ void	cleanMsg(char *buffer, char *msg)
 	/*int i;
 	for (i = 0; buffer[i] != '\0'; i++)
 		buffer[i] = 0;*/
-	strcpy(buffer, "");
-	strcpy(msg, "");
+	free(buffer);
+	free(msg);
 }
 
 char	*getname(size_t namesize)
