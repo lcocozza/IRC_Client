@@ -74,9 +74,8 @@ int	receive_message(SOCKET socket, char *buffer)
 
 void	cleanMsg(char *buffer, char *msg)
 {
-	/*int i;
-	for (i = 0; buffer[i] != '\0'; i++)
-		buffer[i] = 0;*/
+	memset(buffer, 0, strlen(buffer));
+	memset(msg, 0, strlen(msg));
 	free(buffer);
 	free(msg);
 }
@@ -86,7 +85,6 @@ char	*getname(size_t namesize)
 	char *tmp = NULL;
 
 	tmp = malloc(namesize);
-
 	getlogin_r(tmp, namesize);
 
 	return tmp;
