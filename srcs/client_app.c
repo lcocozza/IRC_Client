@@ -1,4 +1,5 @@
-#include "header.h"
+#include "sys_incl.h"
+#include "ft.h"
 
 void	app(SOCKET socket)
 {
@@ -47,14 +48,14 @@ void	app(SOCKET socket)
 			}
 		}
 	}
-	close_connection(socket);
+	closesocket(socket);
 }
 
 void	send_message(SOCKET socket, char *buffer)
 {	
 	int i;
 
-	for (i = 0; buffer[i] != '\n'; i++) ;
+	for (i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++) ;
 	buffer[i] = '\0';
 
 	if (send(socket, buffer, strlen(buffer), 0) < 0)

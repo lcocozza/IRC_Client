@@ -2,7 +2,7 @@
 
 OPTION= -lpthread
 
-FLAGS= -Wall -Wextra -Werror
+FLAGS= -Wextra -Werror
 
 SRC=	srcs/client_app.c \
 	srcs/client_connect.c \
@@ -10,7 +10,7 @@ SRC=	srcs/client_app.c \
 	srcs/display.c
 
 all:
-	gcc $(FLAGS) $(SRC) -o IRC_Client -I includes/
+	gcc $(FLAGS) $(SRC) -o IRC_Client -I includes/ -g
 
 clean:
 	rm IRC_Client

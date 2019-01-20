@@ -1,4 +1,5 @@
-#include "header.h"
+#include "sys_incl.h"
+#include "ft.h"
 
 int	main(int argc, char **argv)
 {
@@ -8,7 +9,7 @@ int	main(int argc, char **argv)
 	title();
 	socket = init_connection(argv);
 	app(socket);
-	close_connection(socket);
+	closesocket(socket);
 
 	return 0;
 }

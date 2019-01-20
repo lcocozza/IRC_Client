@@ -1,24 +1,25 @@
-#include "header.h"
+#include "sys_incl.h"
+#include "ft.h"
 
-#ifdef _WIN32
-static void init(void)
+static void	init(void)
 {
-    WSADATA wsa;
-    int err = WSAStartup(MAKEWORD(2, 2), &wsa);
-    if(err < 0)
-    {
-        puts("WSAStartup failed !");
-        exit(EXIT_FAILURE);
-    }
-}
+#ifdef _WIN32
+	WSADATA wsa;
+	int err = WSAStartup(MAKEWORD(2, 2), &wsa);
+	if(err < 0)
+	{
+		puts("WSAStartup failed !");
+		exit(EXIT_FAILURE);
+	}
 #endif
+}
 
-#ifdef _WIN32
-static void end(void)
+static void	end(void)
 {
-    WSACleanup();
-}
+#ifdef _WIN32
+	WSACleanup();
 #endif
+}
 
 void	arg(int argc, char **argv)
 {
@@ -47,7 +48,7 @@ int	init_connection(char **argv)
 		closesocket(network_socket);
 		exit(errno);
 	}
-	
+
 	hostinfo = gethostbyname(argv[1]);
 	if (hostinfo == NULL)
 	{
@@ -61,7 +62,7 @@ int	init_connection(char **argv)
 	server_address.sin_addr = *(IN_ADDR *) hostinfo->h_addr;
 	server_address.sin_port = htons(atoi(argv[2]));
 	server_address.sin_family = AF_INET;
-	
+
 	do
 	{
 		printf("try to connect to the server...\n");
@@ -80,9 +81,4 @@ int	init_connection(char **argv)
 		exit(errno);
 	}	
 	return network_socket;
-}
-
-void	close_connection(SOCKET socket)
-{
-	closesocket(socket);
 }
