@@ -7,9 +7,7 @@ void	app(SOCKET socket)
 	int statu;
 	fd_set readfs;
 	
-	strcpy(pseudo, "[");
-	strcat(pseudo, getname(sizeof(pseudo)));
-	strcat(pseudo, "] ");
+	getname(pseudo, sizeof(pseudo));
 
 	while (1)
 	{
@@ -21,10 +19,8 @@ void	app(SOCKET socket)
 		FD_SET(STDIN_FILENO, &readfs);
 
 		if (select(socket + 1, &readfs, NULL, NULL, NULL) == -1)
-		{
-			perror("select()");
-			exit(errno);
-		}
+			get_error("select()", 1, -1);
+
 		if (FD_ISSET(STDIN_FILENO, &readfs))
 		{
 			fgets(msg, sizeof(char) * 1000, stdin);
@@ -49,44 +45,4 @@ void	app(SOCKET socket)
 		}
 	}
 	closesocket(socket);
-}
-
-void	send_message(SOCKET socket, char *buffer)
-{	
-	int i;
-
-	for (i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++) ;
-	buffer[i] = '\0';
-
-	if (send(socket, buffer, strlen(buffer), 0) < 0)
-	{
-		perror("send()");
-		exit(errno);
-	}
-}
-
-int	receive_message(SOCKET socket, char *buffer)
-{
-	int statu = 0;
-	if ((statu = recv(socket, buffer, 1024, 0)) < 0)
-		perror("recv()");
-	return statu;
-}
-
-void	cleanMsg(char *buffer, char *msg)
-{
-	memset(buffer, 0, strlen(buffer));
-	memset(msg, 0, strlen(msg));
-	free(buffer);
-	free(msg);
-}
-
-char	*getname(size_t namesize)
-{
-	char *tmp = NULL;
-
-	tmp = malloc(namesize);
-	getlogin_r(tmp, namesize);
-
-	return tmp;
 }

@@ -43,18 +43,13 @@ int	init_connection(char **argv)
 	struct hostent *hostinfo = NULL;
 
 	if (network_socket == INVALID_SOCKET)
-	{
-		perror("socket()");
-		closesocket(network_socket);
-		exit(errno);
-	}
+		get_error("socket()", 1, network_socket);
 
 	hostinfo = gethostbyname(argv[1]);
 	if (hostinfo == NULL)
 	{
 		printf("Unknow host %s.\n", argv[1]);
-		closesocket(network_socket);
-		exit(EXIT_FAILURE);
+		get_error(NULL, 1, network_socket);
 	}
 	else
 		printf("Building connection...\n");
@@ -70,15 +65,12 @@ int	init_connection(char **argv)
 		if (connection_status == SOCKET_ERROR)
 			ATTENDRE(1);
 		else
-			time = 14;
+			break;
 		time++;
 	} while (time < 15);
 
 	if (connection_status == SOCKET_ERROR)
-	{	
-		perror("connect()");
-		closesocket(network_socket);
-		exit(errno);
-	}	
+		get_error("connect()", 1, network_socket);
+	
 	return network_socket;
 }
