@@ -22,3 +22,14 @@ void	getname(char *name, size_t namesize)
 	strcat(name, "] ");
 	free(tmp);
 }
+
+void	arg(int argc, char **argv)
+{
+	if (argc != 3)
+	{
+		printf(	"Invalide Argument.\n"
+			"Usage: ./%s [ip] [port]\n", argv[0]);
+		exit(0);
+	}
+
+}

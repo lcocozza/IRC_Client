@@ -4,9 +4,9 @@ OPTION= -lpthread
 
 FLAGS= -Wextra -Werror
 
-SRC=	srcs/client_app.c \
-	srcs/client_connect.c \
-	srcs/main.c \
+SRC=	srcs/main.c \
+	srcs/ft_files/ft_client.c \
+	srcs/ft_files/ft_network.c \
 	srcs/ft_files/ft_display.c \
 	srcs/ft_files/ft_general.c \
 	srcs/ft_files/ft_messages.c
