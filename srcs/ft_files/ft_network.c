@@ -1,25 +1,6 @@
 #include "sys_incl.h"
+#include "struct.h"
 #include "ft.h"
-
-static void	init(void)
-{
-#ifdef _WIN32
-	WSADATA wsa;
-	int err = WSAStartup(MAKEWORD(2, 2), &wsa);
-	if(err < 0)
-	{
-		puts("WSAStartup failed !");
-		exit(EXIT_FAILURE);
-	}
-#endif
-}
-
-static void	end(void)
-{
-#ifdef _WIN32
-	WSACleanup();
-#endif
-}
 
 int	init_connection(char **argv)
 {
@@ -52,7 +33,7 @@ int	init_connection(char **argv)
 		printf("try to connect to the server...\n");
 		connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
 		if (connection_status == SOCKET_ERROR)
-			ATTENDRE(1);
+			sleep(1);
 		else
 			break;
 		time++;
@@ -62,4 +43,23 @@ int	init_connection(char **argv)
 		get_error("connect()", 1, network_socket);
 	
 	return network_socket;
+}
+
+void	send_message(SOCKET socket, char *buffer)
+{
+	//int i;
+
+	//for (i = 0; buffer[i] != '\n' && buffer[i] != '\0'; i++) ;
+	//buffer[i] = '\0';
+
+	if (send(socket, buffer, strlen(buffer), 0) < 0)
+		get_error("send()", 1, -1);
+}
+
+int	receive_message(SOCKET socket, char *buffer)
+{
+	int statu = 0;
+	if ((statu = recv(socket, buffer, BUFFSIZE, 0)) < 0)
+		get_error("recv()", -1, -1);
+	return statu;
 }

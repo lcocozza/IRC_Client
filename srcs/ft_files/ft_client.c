@@ -1,19 +1,30 @@
 #include "sys_incl.h"
+#include "struct.h"
 #include "ft.h"
 
-void	app(SOCKET socket)
+void	app(SOCKET socket, t_win *screen)
 {
-	char pseudo[24];
+	char buffer[BUFFSIZE];
+	char pseudo[PSDSIZE];
+	char msg[MSGSIZE];
+	FILE *file = NULL;
 	int statu;
 	fd_set readfs;
+	t_data data;
+
+	data.cursor_y = 0;
+	data.cursor_x = 0;
+	data.line = 0;
 	
-	getname(pseudo, sizeof(pseudo));
+	getname(pseudo);
+
+	file = fopen("input.log", "w");
+	fclose(file);
+	file = fopen("output.log", "w");
+	fclose(file);
 
 	while (1)
 	{
-		char *buffer = malloc(sizeof(char) * 1024);
-		char *msg = malloc(sizeof(char) * 1000);
-
 		FD_ZERO(&readfs);
 		FD_SET(socket, &readfs);
 		FD_SET(STDIN_FILENO, &readfs);
@@ -23,11 +34,7 @@ void	app(SOCKET socket)
 
 		if (FD_ISSET(STDIN_FILENO, &readfs))
 		{
-			fgets(msg, sizeof(char) * 1000, stdin);
-			strcpy(buffer, pseudo);
-			strcat(buffer, msg);
-			send_message(socket, buffer);
-			cleanMsg(buffer, msg);
+			get_input(screen, &data, pseudo, socket);
 		}
 		else if (FD_ISSET(socket, &readfs))
 		{
@@ -39,10 +46,13 @@ void	app(SOCKET socket)
 			}
 			else
 			{
-				printf("%s\n", buffer);
+				insert_output(buffer);
+				print_output(screen, &data);
 				cleanMsg(buffer, msg);
 			}
 		}
+		wrefresh(screen[1].win_t);
+		wrefresh(screen[0].win_t);
 	}
-	closesocket(socket);
+	close(socket);
 }
