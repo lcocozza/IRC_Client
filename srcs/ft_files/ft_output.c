@@ -22,7 +22,7 @@ void	print_output(t_win *screen, t_data *data)
 	werase(screen[1].win_t);
 	while (fscanf(output_log, "$%s ", pseudo) != EOF)
 	{
-		if (strcmp(pseudo, "[serveur]") == 0)
+		if (strcmp(pseudo, "[server]") == 0)
 			pair = 2;
 		else
 			pair = 1;

@@ -4,9 +4,9 @@
 
 void	app(SOCKET socket, t_win *screen)
 {
-	char buffer[BUFFSIZE];
-	char pseudo[PSDSIZE];
-	char msg[MSGSIZE];
+	char buffer[BUFFSIZE] = {0};
+	char pseudo[PSDSIZE] = {0};
+	char msg[MSGSIZE] = {0};
 	FILE *file = NULL;
 	int statu;
 	fd_set readfs;
@@ -47,7 +47,6 @@ void	app(SOCKET socket, t_win *screen)
 			else
 			{
 				insert_output(screen, &data, buffer);
-				print_output(screen, &data);
 				cleanMsg(buffer, msg);
 			}
 		}
