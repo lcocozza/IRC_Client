@@ -46,7 +46,7 @@ void	app(SOCKET socket, t_win *screen)
 			}
 			else
 			{
-				insert_output(buffer);
+				insert_output(screen, &data, buffer);
 				print_output(screen, &data);
 				cleanMsg(buffer, msg);
 			}

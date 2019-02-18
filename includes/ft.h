@@ -42,6 +42,6 @@ void	print_input(t_win *screen);
 
 void	scroll_text(t_win *screen, t_data *data, int dir);
 void	print_output(t_win *screen, t_data *data);
-void	insert_output(char *buffer);
+void	insert_output(t_win *screen, t_data *data, char *buffer);
 
 #endif

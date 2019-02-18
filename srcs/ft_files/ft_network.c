@@ -30,7 +30,7 @@ int	init_connection(char **argv)
 
 	do
 	{
-		printf("try to connect to the server...\n");
+		printf("try to connect...\n");
 		connection_status = connect(network_socket, (SOCKADDR *) &server_address, sizeof(SOCKADDR));
 		if (connection_status == SOCKET_ERROR)
 			sleep(1);

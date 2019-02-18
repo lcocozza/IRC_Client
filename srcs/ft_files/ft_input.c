@@ -42,16 +42,14 @@ void	get_input_msg(t_win *screen, t_data *data, char *pseudo, int socket)
 	input_log = fopen("input.log", "w");
 	fclose(input_log);
 
-	if (strcmp(msg, "/quite") == 0)
+	if (strcmp(msg, "/quit") == 0)
 		end_prog();
 	if (strcmp(msg, "") != 0)
 	{
 		strcpy(buffer, "$");
 		strcat(buffer, pseudo);
 		strcat(buffer, msg);
-		insert_output(buffer);
-		werase(screen[1].win_t);
-		print_output(screen, data);
+		insert_output(screen, data, buffer);
 		send_message(socket, buffer);
 	}
 	werase(screen[0].win_t);
@@ -137,9 +135,9 @@ void	get_input(t_win *screen, t_data *data, char *pseudo, int socket)
 	else if (key == KEY_RIGHT)
 		move_cursor(screen, 1, -1, -1);
 	else if (key == KEY_UP)
-		scroll_text(screen, data, 1);
-	else if (key == KEY_DOWN)
 		scroll_text(screen, data, -1);
+	else if (key == KEY_DOWN)
+		scroll_text(screen, data, 1);
 	else if (key >= ' ' && key <= '~')
 		insert_input(screen, key);
 	else if (key == KEY_BACKSPACE)
